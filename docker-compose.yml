@@ -1,0 +1,21 @@
+jenkins:
+  image: jenkins
+  ports:
+    - "8080:8080"
+
+gjproxy:
+  build: .
+  ports:
+    - "5000:5000"
+  links:
+    - jenkins
+  volumes:
+    - .:/github_jenkins_proxy
+  environment:
+    GJP_SETTINGS: /github_jenkins_proxy/local_settings.py
+
+ngrok:
+  image: centurylink/ngrok
+  links:
+    - gjproxy
+  command: /bin/ngrok -log=stdout gjproxy:5000

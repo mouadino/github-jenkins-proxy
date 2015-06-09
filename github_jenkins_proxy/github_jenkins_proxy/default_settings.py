@@ -1,0 +1,9 @@
+GITHUB_SIGNATURE_SECRET = ''
+JENKINS_URL = 'http://jenkins:8080'
+JENKINS_USERNAME = None
+JENKINS_PASSWORD = None
+JENKINS_TEMPLATE_JOB = 'template_job'
+# e.g. JENKINS_JOB_PARAMETERS = {'mouadino/github-jenkins-proxy': 'ECHO_REF'}
+JENKINS_JOB_PARAMETERS = {}
+GITHUB_OAUTH_TOKEN = ''
+DEBUG = True
