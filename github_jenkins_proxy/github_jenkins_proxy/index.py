@@ -24,16 +24,20 @@ def jenkins_notifications():
 
 
 def _set_pr_status(build_info):
-    if build_info['phase'] not in ('FINALIZED', 'COMPLETED'):
-        return
-    if build_info['status'] == 'FAILURE':
-        state, description = 'failure', 'Build failed'
+    if build_info['phase'] == 'PENDING':
+        state, description = 'pending', 'Build pending'
+    elif build_info['phase'] in ('FINALIZED', 'COMPLETED'):
+        if build_info['status'] == 'FAILURE':
+            state, description = 'failure', 'Build failed'
+        else:
+            state, description = 'success', 'Build succeeded'
     else:
-        state, description = 'success', 'Build succeeded'
+        app.log.warning('Unknown phase received from jenkins %s', build_info['phase'])
+        return
     job_path = build_info['url']
     # FIXME: Will we get all repo that we are building or what ?
     # detailled_build_info = jenkins.get_build_info(build_info['name'], build_info['build']['number'])
-
+    # FIXME: Hard coded dependency scm.
     repo = giturlparse.parse(build_info['scm']['url'])
     sha = build_info['scm']['commit']
     statuses_url = 'https://api.github.com/repos/{owner}/{name}/statuses/{sha}'.format(sha=sha, name=repo.repo, owner=repo.owner)
